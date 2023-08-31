@@ -2,23 +2,25 @@
 #Action: Check whether the files that were updated on the promotion branch match the contents of the same file in the dev branch
 #Send an email stating whether they do or do not match
 
-name: Pull Request Checks
+name: File Checks
 on: 
-  pull_request:
-    branches: main
+  push:
+    branches: 
+      - 'promotion/***'
 
 jobs: 
-  check_if_branch_is_ahead_main:
+  #action:
+  check_if_promotion_branch_updates_match_dev_branch_updates:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
       - uses: actions/checkout@v3
         with: 
           fetch-depth: 0
-      - name: Check if branch is ahead of main
+      - name: Check if promotion branch updates match dev branch updates
         run: |
           if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }};
-          then echo "This branch is not up to date with main";
+          then echo "This branch does not match";
           exit 1; fi
 
  
